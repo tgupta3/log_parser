@@ -29,7 +29,7 @@ $ python main.py action log_file [options]
 
   Options:
   -h, --help  			print help message and exit
-  -l, --log-level       sets log level, choices={DEBUG,INFO,WARNING,ERROR,CRITICAL}
+  -l, --log-level		sets log level, choices={DEBUG,INFO,WARNING,ERROR,CRITICAL}
   -d, --daemon-log		sets the output log file for daemon
   -f, --pid-file		sets the pidfile for daemon
   -o, --output-file		sets the output file for daemon
