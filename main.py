@@ -109,7 +109,6 @@ class MyDaemon(Daemon):
         logger.info("Daemon is running")
         node_curr = 0
         line_visited = 0
-        #last_track = 0
         time_last_pass = time.time()
 
         while True:
@@ -118,7 +117,8 @@ class MyDaemon(Daemon):
                 logger.debug(
                     "File was rotated,"
                     "Last inode was %s, Present is %s",
-                    node_curr, node_next)
+                    node_curr, node_next
+                )
                 node_curr = node_next
                 line_visited = 0
 
@@ -128,21 +128,15 @@ class MyDaemon(Daemon):
                 match = MyDaemon.match_pattern(line)
 
                 if match:
-                    output_key = match.group(
-                        1) + '\t' + match.group(2)
+                    output_key = match.group(1) + '\t' + match.group(2)
                     self.output_map[output_key] += 1
                 else:
                     logger.warning(
-                        "Possible error in the log-file being parsed")
+                        "Possible error in the log-file being parsed"
+                    )
 
             # Write to stdout every 10sec
             if self.should_print(time_last_pass):
-                '''with open(
-                    '/home/tgupta/dropbox/completed.txt', 'w', 1
-                ) as comp:
-                    comp.write(str(last_track + 1))
-                    last_track += 1'''
-
                 self.display_output()
                 time_last_pass = time.time()
 
@@ -179,19 +173,19 @@ def main(argv):
     parser.add_argument(
         "-d", "--daemon-log", dest="daemonLog",
         type=valid_arg, default='/tmp/daemon.log',
-        metavar='log file',
+        metavar='log_file',
         help="Set the log file,default is /tmp/daemon.log"
     )
     parser.add_argument(
         "-o", "--output-file", dest="outFile",
         type=valid_arg, default='/tmp/daemon_output.txt',
-        metavar='output File',
+        metavar='output_File',
         help="Set the output file,default is /tmp/daemon_output.txt"
     )
     parser.add_argument(
         "-p", "--pid-file", dest="pidFile",
         type=valid_arg, default='/tmp/daemon_pid.pid',
-        metavar='pid File',
+        metavar='pid_File',
         help="Set the pid file,default is /tmp/daemon_pid.pid"
     )
 
