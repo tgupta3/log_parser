@@ -8,8 +8,9 @@ The program runs a daemon which processes log
 
 Python 2.6+ required.
 The logs being written should be of format
+```
 $ip_address\t$method $route\t$status_code\t$response_bytes
-
+```
 
 ### Installing
 
