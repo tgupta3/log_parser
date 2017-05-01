@@ -174,7 +174,7 @@ def main(argv):
         "-l", "--log-level", dest="logLevel",
         choices=['DEBUG', 'INFO', 'WARNING', "ERROR", 'CRITICAL'],
         default='INFO',
-        help="Set the logging level,default=CRITICAL"
+        help="Set the logging level,default=INFO"
     )
     parser.add_argument(
         "-d", "--daemon-log", dest="daemonLog",
