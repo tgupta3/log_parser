@@ -84,8 +84,9 @@ class Logger(object):
         return (time.time() - self.last_rotate) > self.rotate_secs
 
     def rotate_logfile(self):
-        now = time.time()
-        os.rename(self.log_filename, "{}.{}".format(self.log_filename, now))
+        now = int(time.time())
+        filename,fileextension = os.path.splitext(self.log_filename)
+        os.rename(self.log_filename, "{}-{}{}".format(filename,now,fileextension))
         self.log_file.close()
         self.log_file = Logger.open(self.log_filename)
         self.last_rotate = now
