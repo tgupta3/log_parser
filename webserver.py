@@ -3,7 +3,7 @@
 """
 This script produces a log file similar to what you'd see from a web server.
 """
-from collections import defaultdict
+
 import argparse
 import os
 import random
@@ -54,21 +54,14 @@ def get_random_ip():
     return socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)))
 
 
-def generate_log_line(output_map):
+def generate_log_line():
     """Generate a random log line."""
-    ip=get_random_ip(),
-    method=random.choice(METHODS),
-    route=random.choice(ROUTES),
-    status_code=random.choice(STATUS_CODES),
-    response_bytes=random.randint(64, RESPONSE_BYTES_MAX)
-    output_map[str(route[0])+'\t'+str(status_code[0])]+=1
-    
-    
     return LOG_FORMAT.format(
-        ip=ip[0],
-        method=method[0],
-        route=route[0],
-        status_code=status_code[0],response_bytes=response_bytes
+        ip=get_random_ip(),
+        method=random.choice(METHODS),
+        route=random.choice(ROUTES),
+        status_code=random.choice(STATUS_CODES),
+        response_bytes=random.randint(64, RESPONSE_BYTES_MAX)
     )
 
 
@@ -82,7 +75,7 @@ class Logger(object):
 
     @staticmethod
     def open(log_filename):
-        return open(log_filename, "w", 1)
+        return open(log_filename, "a", 1)
 
     def __del__(self):
         self.log_file.close()
@@ -91,7 +84,6 @@ class Logger(object):
         return (time.time() - self.last_rotate) > self.rotate_secs
 
     def rotate_logfile(self):
-       
         now = time.time()
         os.rename(self.log_filename, "{}.{}".format(self.log_filename, now))
         self.log_file.close()
@@ -99,33 +91,13 @@ class Logger(object):
         self.last_rotate = now
 
     def log_forever(self):
-        last_track=0
-        output_map=defaultdict(lambda:0)
-        filename='/home/tgupta/dropbox/completed.txt'
         while True:
             if self.should_rotate():
-                
                 self.rotate_logfile()
-            
-            with open(filename) as f_obj:
-                lines=f_obj.readlines()
-
-            
-            if int(lines[0].rstrip())-last_track>0:
-                last_track=int(lines[0].rstrip())
-                print "\n"
-                for output in output_map.keys():
-                    print ("%s\t%s"%(output,str(float(output_map[output])/10)))
-                
-                print "total\t%s"%(sum(output_map.itervalues()))
-                output_map=defaultdict(lambda:0)
-                
-                
-
-            self.log_file.write(generate_log_line(output_map))
+            self.log_file.write(generate_log_line())
             sleep_for = random.randint(1, 10) / 100.0
             time.sleep(sleep_for)
-         
+
 
 def main(argv):
     parser = argparse.ArgumentParser(
@@ -141,7 +113,7 @@ def main(argv):
     )
     parser.add_argument(
         "--log-rotation-interval", "-r", dest="lr_interval", metavar='SECONDS',
-        type=float, default=30.0,
+        type=int, default=30,
         help="How often to rotate out the file we're logging to in seconds."
     )
     args = parser.parse_args(argv[1:])
